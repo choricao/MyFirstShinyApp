@@ -1,18 +1,24 @@
 library(shiny)
 
-ui <- fluidPage(
+ui <- navbarPage(
   tags$head(tags$script(src = "message-handler.js")),
-  titlePanel("New Hike"),
-  
-  mainPanel(
-    actionButton("start_button", "Start"),
-    actionButton("end_button", "End"),
-    helpText("Distance (miles)"),
-    textOutput("distance"),
-    textInput("name", "Hike Name", ""),
-    textInput("nicknames", "Plant Nicknames", ""),
-    actionButton("sow_seeds_button", "Sow Seeds"),
-    textOutput("name")
+  tabPanel("New Hike",
+           fluidPage(
+             actionButton("start_button", "Start"),
+             actionButton("end_button", "End"),
+             helpText("Distance (miles)"),
+             textOutput("distance"),
+             textInput("name", "Hike Name", ""),
+             textInput("nicknames", "Plant Nicknames", ""),
+             actionButton("sow_seeds_button", "Sow Seeds"),
+             textOutput("name")
+           )
+  ),
+  tabPanel("Analytics",
+           fluidPage(
+             "TO BE FILLED"
+           )
+    
   )
 )
 
@@ -37,6 +43,8 @@ server <- function(input, output, session) {
       "Please enter both hike name & plant nicknames."
     }
   })
+  
+  eventReactive
   
   output$name <- renderText({
     names()
