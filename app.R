@@ -1,4 +1,5 @@
 library(shiny)
+library(jsonlite)
 
 ui <- navbarPage(
   tags$head(tags$script(src = "message-handler.js")),
@@ -16,7 +17,8 @@ ui <- navbarPage(
   ),
   tabPanel("Analytics",
            fluidPage(
-             "TO BE FILLED"
+             actionButton("show_data_button", "Show Data"),
+             textOutput("hikes")
            )
     
   )
@@ -43,11 +45,17 @@ server <- function(input, output, session) {
       "Please enter both hike name & plant nicknames."
     }
   })
-  
-  eventReactive
-  
   output$name <- renderText({
     names()
+  })
+  
+  url <- "https://zc-hike-seed.herokuapp.com/hikes"
+  res <- fromJSON(url)
+  hikes <- eventReactive(input$show_data_button, {
+    paste("There are", nrow(res), "hikes have been created between", min(res$date), "and", max(res$date), ". Among them,", sum(res$is_harvest == TRUE), " have produced seeds and been harvested.")
+  })
+  output$hikes <- renderText({
+    hikes()
   })
 }
 
