@@ -17,7 +17,6 @@ ui <- navbarPage(
   ),
   tabPanel("Analytics",
            fluidPage(
-             actionButton("show_data_button", "Show Data"),
              textOutput("hikes")
            )
     
@@ -51,11 +50,8 @@ server <- function(input, output, session) {
   
   url <- "https://zc-hike-seed.herokuapp.com/hikes"
   res <- fromJSON(url)
-  hikes <- eventReactive(input$show_data_button, {
-    paste("There are", nrow(res), "hikes have been created between", min(res$date), "and", max(res$date), ". Among them,", sum(res$is_harvest == TRUE), " have produced seeds and been harvested.")
-  })
   output$hikes <- renderText({
-    hikes()
+    paste("There are", nrow(res), "hikes have been created between", min(res$date), "and", max(res$date), ". Among them,", sum(res$is_harvest == TRUE), " have produced seeds and been harvested.")
   })
 }
 
