@@ -1,6 +1,7 @@
 library(shiny)
 library(jsonlite)
 library(ggplot2)
+library(plotly)
 
 ui <- navbarPage(
   tags$head(tags$script(src = "message-handler.js")),
@@ -19,7 +20,7 @@ ui <- navbarPage(
   tabPanel("Analytics",
            fluidPage(
              textOutput("hikes"),
-             plotOutput("plot")
+             plotlyOutput("plot")
            )
     
   )
@@ -55,8 +56,15 @@ server <- function(input, output, session) {
   output$hikes <- renderText({
     paste("There are", nrow(res), "hikes have been created between", min(res$date), "and", max(res$date), ". Among them,", sum(res$is_harvest == TRUE), " have produced seeds and been harvested.")
   })
-  output$plot <- renderPlot({
-    ggplot(res, aes(x=name, y=distance)) + geom_point() + labs(title="Distance") + theme(plot.title = element_text(size=20, face="bold"))
+  output$plot <- renderPlotly({
+    # ggplot(res, aes(x=name, y=distance)) + geom_point() + labs(title="Distance") + theme(plot.title = element_text(size=20, face="bold"))
+    res %>%
+      plot_ly() %>%
+      add_trace(
+        x = ~name,
+        y = ~distance,
+        type = "scatter"
+        )
   })
 }
 
